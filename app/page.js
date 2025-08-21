@@ -1,45 +1,11 @@
 // app/page.js
-import { headers } from "next/headers";
+import { getDailySelection } from "./lib/deals";
 
 export const dynamic = "force-dynamic";
 
-function getBaseUrl() {
-  // 1) Dominio público definido (cuando ya conectes el dominio)
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-
-  // 2) Vercel expone VERCEL_URL (sin protocolo)
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-
-  // 3) Construir desde cabeceras (host/proto) – útil en SSR
-  try {
-    const h = headers();
-    const host = h.get("x-forwarded-host") || h.get("host");
-    const proto = h.get("x-forwarded-proto") || "https";
-    if (host) return `${proto}://${host}`;
-  } catch {
-    // headers() puede no estar disponible en algunos contextos
-  }
-
-  // 4) Fallback para dev local
-  return "http://localhost:3000";
-}
-
-async function fetchDeals() {
-  const base = getBaseUrl();
-  const url = `${base}/api/products`;
-
-  const res = await fetch(url, {
-    cache: "no-store", // evitar cachés raras en SSR
-  });
-
-  if (!res.ok) {
-    throw new Error(`Fetch failed ${res.status} ${res.statusText} at ${url}`);
-  }
-  return res.json();
-}
-
 export default async function HomePage() {
-  const deals = await fetchDeals();
+  // Carga directa (sin HTTP), 100% SSR-safe
+  const deals = getDailySelection(9);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -53,6 +19,7 @@ export default async function HomePage() {
       <section id="ofertas" className="mt-10">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold">Selección de hoy</h2>
+          {/* Este enlace solo es útil si activas el cron+token para fuentes externas */}
           <a href="/api/refresh?token=demo" className="text-sm text-gray-500 hover:text-brand">
             Forzar refresco
           </a>
