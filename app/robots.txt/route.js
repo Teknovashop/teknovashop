@@ -1,0 +1,1 @@
+export async function GET(){const base=process.env.NEXT_PUBLIC_SITE_URL||'https://example.com';const body=`User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml`;return new Response(body,{headers:{'Content-Type':'text/plain'}});}

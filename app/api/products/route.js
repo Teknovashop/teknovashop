@@ -1,0 +1,1 @@
+import {getDailySelection} from '../../lib/deals';export const dynamic='force-dynamic';export const revalidate=0;export async function GET(){const data=getDailySelection(9);return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}});}
