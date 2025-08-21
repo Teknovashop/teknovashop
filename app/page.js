@@ -1,73 +1,35 @@
 // app/page.js
+import { getLatestNews } from "./lib/news";
 import { getDailySelection } from "./lib/deals";
+import NewsList from "@/components/NewsList";
+import SidebarProducts from "@/components/SidebarProducts";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Carga directa (sin HTTP), 100% SSR-safe
-  const deals = getDailySelection(9);
+  const [news, products] = await Promise.all([
+    getLatestNews(20),
+    Promise.resolve(getDailySelection(6)),
+  ]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
-      <section className="text-center py-10 bg-white rounded-3xl shadow-sm">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-brand">Ofertas del día</h1>
-        <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-          Selección curada de gadgets y electrónica que rinde en comisión. Actualizado diariamente.
+      <section className="text-center py-10 bg-white rounded-3xl shadow-sm mb-8">
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-brand">Actualidad Tech & Ofertas</h1>
+        <p className="mt-3 text-gray-600 max-w-3xl mx-auto">
+          Noticias tecnológicas punteras, y en paralelo ofertas seleccionadas que convierten.
+          Actualizado automáticamente.
         </p>
       </section>
 
-      <section id="ofertas" className="mt-10">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold">Selección de hoy</h2>
-          {/* Este enlace solo es útil si activas el cron+token para fuentes externas */}
-          <a href="/api/refresh?token=demo" className="text-sm text-gray-500 hover:text-brand">
-            Forzar refresco
-          </a>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
+        <main>
+          <h2 className="text-xl font-bold mb-3">Últimas noticias</h2>
+          <NewsList items={news} />
+        </main>
 
-        <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {deals.map((p) => (
-            <article key={p.id} className="bg-white rounded-2xl shadow-sm p-4 hover:shadow-md transition">
-              <img
-                src={p.image || "/placeholder.jpg"}
-                alt={p.name}
-                className="w-full h-44 object-cover rounded-xl"
-              />
-              <h3 className="mt-3 font-semibold text-lg leading-snug">{p.name}</h3>
-              <p className="mt-1 text-sm text-gray-600">{p.description}</p>
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-brand font-bold">{p.priceText || "Ver precio"}</span>
-                <a
-                  href={p.affiliateUrl || "#"}
-                  rel="nofollow sponsored"
-                  target="_blank"
-                  className="inline-flex items-center px-3 py-2 rounded-xl bg-brand text-white hover:bg-brand-dark"
-                >
-                  Ver oferta
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="categorias" className="mt-14">
-        <h2 className="text-xl font-bold mb-4">Categorías populares</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {["Auriculares", "Smartwatch", "Accesorios PC", "Hogar inteligente", "Audio", "Gaming"].map((c) => (
-            <div key={c} className="rounded-xl bg-white p-4 border hover:border-brand/60 transition text-center">
-              {c}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="contacto" className="mt-14 text-center text-sm text-gray-600">
-        ¿Dudas? Escríbenos a{" "}
-        <a href="mailto:contacto@teknovashop.com" className="text-brand">
-          contacto@teknovashop.com
-        </a>
-      </section>
+        <SidebarProducts products={products} />
+      </div>
     </div>
   );
 }

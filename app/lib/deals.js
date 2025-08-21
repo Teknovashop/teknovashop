@@ -1,1 +1,19 @@
-import products from '../../data/products.json';function daySeed(){const d=new Date();return (d.getUTCFullYear()*10000+(d.getUTCMonth()+1)*100+d.getUTCDate())%100000;}function rotate(arr,off){const n=arr.length;const k=((off%n)+n)%n;return arr.slice(k).concat(arr.slice(0,k));}export function getDailySelection(size=9){const rotated=rotate(products,daySeed());return rotated.slice(0,Math.min(size,rotated.length));}
+// app/lib/deals.js
+import fs from "node:fs";
+import path from "node:path";
+
+function readProducts() {
+  try {
+    const file = path.join(process.cwd(), "data", "products.json");
+    const raw = fs.readFileSync(file, "utf-8");
+    const list = JSON.parse(raw);
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+export function getDailySelection(limit = 6) {
+  const items = readProducts();
+  return items.slice(0, limit);
+}
