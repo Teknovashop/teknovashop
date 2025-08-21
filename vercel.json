@@ -1,1 +1,7 @@
 { "crons": [ { "path": "/api/refresh?token=%REFRESH_TOKEN%", "schedule": "0 6 * * *" } ] }
+{
+  "crons": [
+    { "path": "/api/refresh?token=%REFRESH_TOKEN%", "schedule": "0 6 * * *" },
+    { "path": "/api/refresh-news?token=%REFRESH_TOKEN%", "schedule": "*/30 * * * *" }
+  ]
+}
