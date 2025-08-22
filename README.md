@@ -1,1 +1,3 @@
-# Teknovashop - Tema profesional
+# Teknoshop
+
+Proyecto profesional con noticias tecnológicas + productos con afiliados.
