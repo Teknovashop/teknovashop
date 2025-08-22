@@ -1,0 +1,1 @@
+// Tarjeta para cada noticia
