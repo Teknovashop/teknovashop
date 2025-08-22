@@ -1,0 +1,1 @@
+'use client'; export default function Carousel() { return <div>Top Ventas</div> }

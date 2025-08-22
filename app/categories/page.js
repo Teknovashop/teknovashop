@@ -1,1 +1,1 @@
-// Landing de categorías con filtros
+'use client'; export default function Categories() { return <div>Categorías</div> }

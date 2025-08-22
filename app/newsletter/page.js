@@ -1,1 +1,1 @@
-// Página para suscribirse al newsletter
+'use client'; export default function Newsletter() { return <div>Newsletter</div> }
